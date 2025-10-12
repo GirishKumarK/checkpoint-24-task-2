@@ -1,0 +1,20 @@
+version: "3.3"
+
+services:
+  fastbot:
+    image: fastbot-sim:humble   # use full image name
+    shm_size: "2g"
+    environment:
+      - DISPLAY=${DISPLAY}            # for GUI; remove if headless
+      - ROS_DOMAIN_ID=7               # pick a domain; must match other ROS 2 nodes
+      # - RMW_IMPLEMENTATION=rmw_fastrtps_cpp   # optional, if you want to pin the RMW
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw   # for GUI; remove if headless
+      - ./scripts/run_sim.sh:/run_sim.sh:ro
+      - ./scripts/test_waypoints.sh:/test_waypoints.sh:ro
+    command: ["/test_waypoints.sh"]
+    # optional quality-of-life:
+    tty: true
+    stdin_open: true
+    # If you’re on Apple Silicon and the image is amd64-only:
+    # platform: linux/amd64

@@ -1,5 +1,5 @@
 # ROS 2 Humble on Ubuntu 22.04
-FROM ros:humble-desktop
+FROM osrf/ros:humble-desktop
 
 SHELL ["/bin/bash","-lc"]
 ENV DEBIAN_FRONTEND=noninteractive
@@ -22,12 +22,15 @@ RUN mkdir -p $ROS_WS/src
 WORKDIR $ROS_WS
 
 # Bring in sources (your FastBot sim + fastbot_waypoints should be under ./src)
-COPY src/ $ROS_WS/src/
+#COPY src/ $ROS_WS/src/
+
+COPY ./fastbot $ROS_WS/src/fastbot
 
 # Install dependencies
-RUN source /opt/ros/humble/setup.bash && \
+RUN apt-get update -y && \
+    source /opt/ros/humble/setup.bash && \
     rosdep install --from-paths src --ignore-src -r -y
-
+    
 # Build (merge-install makes sourcing easy)
 RUN source /opt/ros/humble/setup.bash && \
     colcon build --merge-install
@@ -35,13 +38,15 @@ RUN source /opt/ros/humble/setup.bash && \
 # Environment
 ENV ROS_DISTRO=humble
 ENV ROS_DOMAIN_ID=7
-ENV RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+#ENV RMW_IMPLEMENTATION=rmw_fastrtps_cpp
 
 # Entrypoint + helper scripts
-COPY scripts/entrypoint.sh /entrypoint.sh
-COPY scripts/run_sim.sh /run_sim.sh
-COPY scripts/test_waypoints.sh /test_waypoints.sh
+COPY ./scripts/entrypoint.sh /entrypoint.sh
+COPY ./scripts/run_sim.sh /run_sim.sh
+COPY ./scripts/test_waypoints.sh /test_waypoints.sh
 RUN chmod +x /entrypoint.sh /run_sim.sh /test_waypoints.sh
+
+
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["bash"]

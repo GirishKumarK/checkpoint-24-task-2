@@ -1,38 +1,32 @@
-# ros2_ci — Jenkins CI for ROS 2 Humble + Gazebo (Headless)
+# ros2_ci — Jenkins CI for ROS2 (Humble) + Gazebo
 
-This repository builds a Docker image with **ROS 2 Humble**, **Gazebo (Classic)**, the **FastBot** simulation packages, and your **fastbot_waypoints** package (Checkpoint 23).  
-A Jenkins Pipeline builds the image and runs the tests automatically whenever a Pull Request is **merged** into the default branch.
+## This repository provides a Dockerized ROS2 Humble + Gazebo environment and a Jenkins Pipeline that builds the image and runs tests automatically whenever a Pull Request is merged into the default branch.
 
----
+# Repository URL (for Jenkins & PRs):
+https://github.com/Andreas-Ioannou/checkpoint-24-task-2.git
 
-## Repository URL (for Jenkins & PRs)
-Use the URL of **this** repository in Jenkin:  
- `https://github.com/Andreas-Ioannou/checkpoint-24-task-2.git`
+# 1) What’s inside
 
----
+- Dockerfile — Builds an image with ROS2 Humble, Gazebo, your simulation packages, and tests.
 
-## 1) Start Jenkins
+## Jenkins — Pipeline that:
 
-```bash
-cd ~/webpage_ws
-bash start_jenkins.sh
-# Open the URL printed by the script (often http://localhost:8080)
-# Initial admin password:
+- checks out this repo
+
+- builds the Docker image
+
+- runs tests
+
+- publishes JUnit XML results
+
+# 3) Start Jenkins
+
+- cd ~/webpage_ws
+- bash start_jenkins.sh
+- cd
+- #Open the "jenkins__pid__url.txt" and access the URL
+# Get initial admin password (current password):
 cat ~/jenkins_home/secrets/initialAdminPassword
-# Minimal setup: continue as admin; suggested plugins (or None) are fine
 
-2) Create the Jenkins Pipeline
-
-Jenkins → New Item → Pipeline → name: ros2_ci.
-
-Pipeline → Definition: Pipeline script from SCM
-
-SCM: Git
-
-Repository URL: (this repository’s URL)
-
-Credentials: none (if public)
-
-Script Path: Jenkinsfile
-
-Save. The Jenkinsfile already contains pollSCM('* * * * *') (poll each minute).
+- Username: admin
+- Password: c3d95b993e2e4a2bbafac7777f06f1e0
